@@ -1,0 +1,56 @@
+.ant-input-affix-wrapper-focused, .ant-input-affix-wrapper:hover, .ant-input-affix-wrapper:focus {
+  border-right-width: 2px !important;
+}
+
+
+.ant-form-item-explain {
+  font-size: 12px;
+  text-align: left;
+}
+
+.ant-notification-notice-message {
+  font-weight: bold;
+}
+
+.ant-modal-content {
+  border: 2px solid $app-secondary-dark;
+}
+
+.ant-modal-close-x {
+  background: rgba(0, 0, 0, 0.1);
+  height: 20px;
+  width: 20px;
+  line-height: 20px;
+  font-size: 13px;
+  margin: 10px;
+}
+
+
+
+
+
+
+$borderColorClasses: ("gray": #c5c5c5, "primary": #000256);
+$allPlacements: ("top": ("topRight", "topLeft"), "bottom": ("bottomRight", "bottomLeft"));
+
+@each $class, $color in $borderColorClasses {
+  .#{$class}-bordered-overlay .ant-popover-inner-content {
+    padding: 0;
+  }
+  .#{$class}-bordered-overlay .ant-popover-inner {
+    border: 2px solid $color;
+  }
+  @each $name, $placements in $allPlacements {
+    @each $placement in $placements {
+      .#{$class}-bordered-overlay.ant-popover-placement-#{$placement} > .ant-popover-content > .ant-popover-arrow {
+        @if $name == "top" {
+          border-bottom-color: $color;
+          border-right-color: $color;
+        } @else {
+          border-top-color: $color;
+          border-left-color: $color;
+        }
+      }
+    }
+  }
+}
