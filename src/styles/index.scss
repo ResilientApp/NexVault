@@ -42,21 +42,20 @@ $light-red: #d93131;
 }
 
 body {
-    width: 375px;
-    height: 500px;
+    width: 357px;
+    height: 600px;
     background: #fff;
     margin:0;
     padding:0;
     overflow: hidden;
     display: flex;
-    border: 4px solid #eee;
 }
 
 html {
     margin:0;
     padding:0;
     overflow: hidden;
-    background: #fff;
+    background: #1f1f1f;
     display: flex;
     justify-content: center;
     align-items: center;

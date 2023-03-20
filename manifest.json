@@ -7,6 +7,9 @@
     "type": "module",
     "persistent": true
   },
+  "icons": {
+    "128": "nexvault_icon.png"
+  },
   "content_scripts": [
     {
       "all_frames": true,

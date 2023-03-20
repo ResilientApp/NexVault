@@ -16,6 +16,9 @@ export default defineConfig({
     preprocessorOptions: {
       less: {
         javascriptEnabled: true,
+        modifyVars: {
+          "border-radius-base": "0px",
+        },
       },
       scss: { additionalData: `@import "@/styles/variables";` },
     },
