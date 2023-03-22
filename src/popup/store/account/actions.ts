@@ -6,8 +6,7 @@ import { ActionTree } from "vuex";
 import { Mutations, MutationTypes } from "./mutations";
 import { Account, loadPersistedState, persistState, State } from "./state";
 import { RootState } from "../index";
-import { v4 as uuidv4 } from "uuid";
-import { getAccountStatus, getNetworkStatus } from "../../api/network";
+import { getAccountStatus } from "../../api/network";
 
 export enum ActionTypes {
   INITIALIZE = "INITIALIZE",
@@ -58,17 +57,15 @@ export const actions: ActionTree<State, RootState> & Actions = {
         networkId: payload.networkId,
         account: newAccount,
       });
-      if (!rootState.network.networks[payload.networkId].selectedAccount) {
-        await dispatch(
-          "network/SET_SELECTED_ADDRESS",
-          {
-            networkId: payload.networkId,
-            address: newAccount.address,
-          },
-          { root: true }
-        );
-      }
-      await persistState(state, rootState.user.password);
+      await dispatch(
+        "network/SET_SELECTED_ADDRESS",
+        {
+          networkId: payload.networkId,
+          address: newAccount.address,
+        },
+        { root: true }
+      );
+      //await persistState(state, rootState.user.password);
     } catch (e) {
       return "Error fetching network status";
     }

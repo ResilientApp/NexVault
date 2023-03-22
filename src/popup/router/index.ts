@@ -9,7 +9,6 @@ import SecureVault from "../views/auth/SecureVault.vue";
 import Dashboard from "../views/dashboard/index.vue";
 import AddNetwork from "../views/network/AddNetwork.vue";
 import CreateAccount from "../views/account/create/index.vue";
-import NewAccount from "../views/account/create/NewAccount.vue";
 import RecoverKeyPhrase from "../views/account/create/RecoverKeyPhrase.vue";
 import ImportAccount from "../views/account/create/ImportAccount.vue";
 import SendCoins from "../views/transactions/SendCoins.vue";
@@ -34,20 +33,20 @@ const routes: Array<RouteRecordRaw> = [
     children: [
       { path: "add", component: AddNetwork },
       {
-        path: ":id",
+        path: ":networkID",
         component: RouterView,
         children: [
           {
-            path: "account/add",
-            component: CreateAccount,
+            path: "account",
+            component: RouterView,
             children: [
-              { path: "add", component: NewAccount },
+              { path: "add", component: CreateAccount },
               { path: "recover", component: RecoverKeyPhrase },
               { path: "import", component: ImportAccount },
             ],
           },
           {
-            path: "account/:address",
+            path: "account/:accountAddress",
             component: Dashboard,
             children: [
               { path: "send", component: SendCoins },
@@ -65,27 +64,68 @@ const router = createRouter({
   routes,
 });
 
-export const determineInitialRouteForState = (state: RootState) => {
+/*
+ * Determine route based on state of the store
+ * */
+export const determineInitialRouteForState = async (state: RootState) => {
+  // If the passHash doesn't exist, setup passcode.
   if (!state.user.passHash) {
-    router.replace("/secure");
+    await router.replace("/secure");
     return;
   }
+  // If session hasn't started, start with password
   if (!state.user.password) {
-    router.replace("/login");
+    await router.replace("/login");
     return;
   }
+
   const network = state.network;
   const allNetworks = network.networks;
+  // If no network exists, add network
   if (Object.keys(allNetworks).length === 0) {
-    router.replace("/network/add");
+    await router.replace("/network/add");
     return;
   }
-  const selectedNetworkId = network.selectedNetwork;
-  const selectedNetwork = selectedNetworkId
-    ? allNetworks[selectedNetworkId]
+  // Resolve selectedNetwork, fallback to first network.
+  const selectedNetworkID = network.selectedNetwork;
+  const selectedNetwork = selectedNetworkID
+    ? allNetworks[selectedNetworkID]
     : allNetworks[0];
 
-  router.replace(`/network/${selectedNetwork.id}/account/xyz`);
+  // Resolve selectedAccountAddress
+  let selectedAccountAddress;
+  if (
+    selectedNetwork.selectedAccount &&
+    !!state.account.accounts[
+      selectedNetwork.id + selectedNetwork.selectedAccount
+    ]
+  ) {
+    selectedAccountAddress = selectedNetwork.selectedAccount;
+  }
+  // Fallback to any address.
+  if (!selectedAccountAddress) {
+    const networkAccountID = Object.keys(state.account.accounts).find(
+      (accountID) => {
+        return (
+          state.account.accounts[accountID].networkId === selectedNetwork.id
+        );
+      }
+    );
+    if (networkAccountID) {
+      selectedAccountAddress = state.account.accounts[networkAccountID].address;
+    }
+  }
+
+  // If couldn't find any address for this network, add a new account
+  if (!selectedAccountAddress) {
+    await router.replace(`/network/${selectedNetwork.id}/account/add`);
+    return;
+  }
+
+  // Successfully resolved a network and an account. Goto account home.
+  await router.replace(
+    `/network/${selectedNetwork.id}/account/${selectedAccountAddress}`
+  );
 };
 
 export default router;

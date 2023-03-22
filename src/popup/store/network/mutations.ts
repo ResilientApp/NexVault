@@ -7,6 +7,7 @@ export enum MutationTypes {
   SET_INITIAL_STATE = "SET_INITIAL_STATE",
   SET_SELECTED_NETWORK = "SET_SELECTED_NETWORK",
   SET_SELECTED_ADDRESS = "SET_SELECTED_ADDRESS",
+  MODIFY_NETWORK = "MODIFY_NETWORK",
 }
 
 export type Mutations<S = State> = {
@@ -16,6 +17,10 @@ export type Mutations<S = State> = {
   [MutationTypes.SET_SELECTED_ADDRESS](
     state: S,
     payload: { networkId: string; address: string }
+  ): void;
+  [MutationTypes.MODIFY_NETWORK](
+    state: S,
+    payload: { networkId: string; partialNetwork: Partial<Network> }
   ): void;
 };
 
@@ -34,6 +39,9 @@ export const mutations: MutationTree<State> & Mutations = {
       ...state.networks[payload.networkId],
       selectedAccount: payload.address,
     };
+  },
+  [MutationTypes.MODIFY_NETWORK](state, payload) {
+    Object.assign(state.networks[payload.networkId], payload.partialNetwork);
   },
 };
 

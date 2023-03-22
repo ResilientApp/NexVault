@@ -11,6 +11,7 @@ export interface Activity {
 }
 
 export interface Account {
+  networkId: string;
   address: string;
   privateKey: string;
   activity: Activity[];

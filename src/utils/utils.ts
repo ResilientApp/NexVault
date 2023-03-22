@@ -16,3 +16,10 @@ export async function delay(ms: number): Promise<void> {
     setTimeout(resolve, ms);
   });
 }
+export async function setImmediateInterval(
+  callback: () => void,
+  ms: number
+): Promise<ReturnType<typeof setInterval>> {
+  await callback();
+  return setInterval(callback, ms);
+}

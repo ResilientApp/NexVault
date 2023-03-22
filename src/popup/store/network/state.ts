@@ -6,6 +6,7 @@ export interface Network {
   id: string;
   selectedAccount?: string;
   currency: string;
+  active?: boolean;
 }
 
 export interface State {

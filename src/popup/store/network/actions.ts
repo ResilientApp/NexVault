@@ -14,6 +14,7 @@ export enum ActionTypes {
   INITIALIZE = "INITIALIZE",
   ADD_NETWORK = "ADD_NETWORK",
   SET_SELECTED_ADDRESS = "SET_SELECTED_ADDRESS",
+  REFRESH_STATUS = "REFRESH_STATUS",
 }
 
 type ActionContextType = AugmentedActionContextWithDispatch<Mutations, State>;
@@ -26,6 +27,10 @@ type Actions = {
   [ActionTypes.SET_SELECTED_ADDRESS](
     actionContext: ActionContextType,
     payload: { networkId: string; address: string }
+  ): Promise<void>;
+  [ActionTypes.REFRESH_STATUS](
+    actionContext: ActionContextType,
+    networkId: string
   ): Promise<void>;
 };
 
@@ -62,7 +67,7 @@ export const actions: ActionTree<State, RootState> & Actions = {
     } catch (e) {
       return "Error fetching network status";
     }
-    const newNetwork = { id: uuidv4(), currency, ...network };
+    const newNetwork = { id: uuidv4(), currency, active: true, ...network };
     commit(MutationTypes.ADD_NETWORK, newNetwork);
     if (!state.selectedNetwork) {
       commit(MutationTypes.SET_SELECTED_NETWORK, newNetwork.id);
@@ -72,6 +77,25 @@ export const actions: ActionTree<State, RootState> & Actions = {
   async [ActionTypes.SET_SELECTED_ADDRESS]({ commit, state }, payload) {
     commit(MutationTypes.SET_SELECTED_ADDRESS, payload);
     await persistState(state);
+  },
+  async [ActionTypes.REFRESH_STATUS]({ commit, state }, networkId) {
+    const network = state.networks[networkId];
+    if (!network) {
+      return;
+    }
+    let networkActive = true;
+    try {
+      const networkStatus = await getNetworkStatus(network.endpoint);
+      if (networkStatus.error) {
+        networkActive = false;
+      }
+    } catch (e) {
+      networkActive = false;
+    }
+    commit(MutationTypes.MODIFY_NETWORK, {
+      networkId,
+      partialNetwork: { active: networkActive },
+    });
   },
 };
 

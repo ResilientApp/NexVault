@@ -1,10 +1,22 @@
+<script setup lang="ts">
+
+  const props = defineProps({
+    primary: {
+      type: Boolean,
+      default: false
+    }
+  });
+</script>
+
 <template>
-  <div class="button-container">
-    <div class="text">
-      <slot name="text"></slot>
-    </div>
-    <div class="icon">
-      <slot name="icon"></slot>
+  <div>
+    <div class="button-container" :class="{primary}">
+      <div class="text">
+        <slot name="text"></slot>
+      </div>
+      <div class="icon">
+        <slot name="icon"></slot>
+      </div>
     </div>
   </div>
 </template>
@@ -55,5 +67,23 @@
 .button-container:hover::before {
   top: 3px;
   left: -3px;
+}
+
+
+.primary.button-container {
+  background: transparentize($app-primary, 0.7);
+
+
+  .text {
+    color: $app-primary-dark;
+  }
+
+  .icon {
+    background: $app-primary;
+  }
+}
+
+.primary.button-container::before {
+  background: transparentize($app-primary, 0.7);
 }
 </style>
