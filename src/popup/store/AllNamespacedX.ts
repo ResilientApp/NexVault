@@ -3,6 +3,20 @@ import {
   NamespacedMutations as UserMutations,
 } from "./user";
 
-export type AllNamespacedActions = UserActions;
+import {
+  NamespacedActions as NetworkActions,
+  NamespacedMutations as NetworkMutations,
+} from "./network";
 
-export type AllNamespacedMutations = UserMutations;
+import {
+  NamespacedActions as AccountActions,
+  NamespacedMutations as AccountMutations,
+} from "./account";
+
+export type AllNamespacedActions = UserActions &
+  NetworkActions &
+  AccountActions;
+
+export type AllNamespacedMutations = UserMutations &
+  NetworkMutations &
+  AccountMutations;

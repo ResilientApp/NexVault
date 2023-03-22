@@ -1,3 +1,6 @@
+<script setup lang="ts">
+console.log("Dashboard");
+</script>
 <template>
   <div style="display: flex; flex: 1; justify-content: center;">
 

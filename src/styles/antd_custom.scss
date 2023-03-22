@@ -25,7 +25,23 @@
   margin: 10px;
 }
 
+/*Form customization*/
+.ant-input {
+  font-size: 14px;
+  font-weight: 450;
+  border: 2px solid $app-primary;
+}
 
+.ant-input:hover, .ant-input:focus, .ant-input-focused {
+  border: 2px solid $app-secondary !important;
+  box-shadow: inherit;
+  outline: none;
+}
+
+/*Notification Customization*/
+.ant-notification-notice-message {
+  font-weight: 600;
+}
 
 
 

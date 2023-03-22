@@ -11,7 +11,7 @@
 
 <style scoped lang="scss">
 .button-container {
-  display: flex;
+  display: inline-flex; /*flex will stretch till container. inline-flex hugs the content.*/
   justify-content: center;
   align-items: center;
   background: transparentize($app-secondary, 0.7);

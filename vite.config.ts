@@ -18,6 +18,7 @@ export default defineConfig({
         javascriptEnabled: true,
         modifyVars: {
           "border-radius-base": "0px",
+          "font-family": "Poppins, sans-serif",
         },
       },
       scss: {

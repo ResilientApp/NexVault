@@ -6,6 +6,7 @@ import {Icon} from '@iconify/vue';
 import {notification} from 'ant-design-vue';
 import {useRootStore} from "../../store";
 import {waitForPaint} from "../../../utils/utils";
+import {determineInitialRouteForState} from "../../router";
 
 const store = useRootStore();
 
@@ -26,7 +27,8 @@ const handleSubmit = async () => {
     return;
   }
 
-  store.dispatch('user/SET_VAULT_PASSWORD', {password: passcode});
+  await store.dispatch('user/SET_VAULT_PASSWORD', {password: passcode});
+  determineInitialRouteForState(store.state);
 };
 
 const showErrorNotification = (msg: string) => {

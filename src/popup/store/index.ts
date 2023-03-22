@@ -5,16 +5,19 @@ import {
   useStore,
 } from "vuex";
 import { module as user, State as UserState } from "./user";
+import { module as network, State as NetworkState } from "./network";
 
 import { AllNamespacedActions, AllNamespacedMutations } from "./AllNamespacedX";
 
 export interface RootState {
   user: UserState;
+  network: NetworkState;
 }
 
 export default createStore<RootState>({
   modules: {
     user,
+    network,
   },
 });
 

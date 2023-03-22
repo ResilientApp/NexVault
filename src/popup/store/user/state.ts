@@ -5,7 +5,7 @@ export interface State {
   passHash?: string;
 }
 
-const enableDevAutoLogin = false;
+const enableDevAutoLogin = true;
 export const getInitialState = (): State => {
   if (enableDevAutoLogin && isDevMode()) {
     return {};

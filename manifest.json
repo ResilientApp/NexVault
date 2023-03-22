@@ -10,18 +10,6 @@
   "icons": {
     "128": "nexvault_icon.png"
   },
-  "content_scripts": [
-    {
-      "all_frames": true,
-      "js": [
-        "src/content-script/index.ts"
-      ],
-      "matches": [
-        "*://*/*"
-      ],
-      "run_at": "document_idle"
-    }
-  ],
   "host_permissions": [
     "*://*/*"
   ],

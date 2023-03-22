@@ -9,18 +9,17 @@ export type Namespaced<T, N extends string> = {
 type objectHavingFunctions = { [key: string]: (...args: any) => unknown };
 export type AugmentedActionContextWithDispatch<
   T extends objectHavingFunctions,
-  S,
-  V extends objectHavingFunctions
+  S
 > = {
   commit<K extends keyof T>(
     key: K,
     payload: Parameters<T[K]>[1]
   ): ReturnType<T[K]>;
-  dispatch<K extends keyof AllNamespacedActions | keyof V>(
-    action: K,
-    payload: Parameters<V[K]>[1] | undefined,
+  dispatch<K extends keyof AllNamespacedActions>(
+    key: K,
+    payload: Parameters<AllNamespacedActions[K]>[1],
     options?: DispatchOptions
-  ): ReturnType<V[K]>;
+  ): ReturnType<AllNamespacedActions[K]>;
 } & Omit<ActionContext<S, RootState>, "commit" | "dispatch">;
 
 export type AugmentedActionContext<T extends objectHavingFunctions, S> = {

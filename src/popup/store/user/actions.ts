@@ -16,11 +16,7 @@ export enum ActionTypes {
   LOGIN = "LOGIN",
 }
 
-type ActionContextType = AugmentedActionContextWithDispatch<
-  Mutations,
-  State,
-  Actions
->;
+type ActionContextType = AugmentedActionContextWithDispatch<Mutations, State>;
 type Actions = {
   [ActionTypes.INITIALIZE](actionContext: ActionContextType): Promise<void>;
   [ActionTypes.SET_VAULT_PASSWORD](
@@ -34,7 +30,7 @@ type Actions = {
 };
 
 export const actions: ActionTree<State, RootState> & Actions = {
-  async [ActionTypes.INITIALIZE]({ commit }) {
+  async [ActionTypes.INITIALIZE]({ commit, dispatch }) {
     const passHash = (await get("passHash")) as string | undefined;
     await bgComm.waitToConnect();
     const pass = await bgComm.getPassword();
@@ -44,7 +40,9 @@ export const actions: ActionTree<State, RootState> & Actions = {
     if (pass) {
       commit(MutationTypes.SET_PASSWORD, pass);
     }
+    await dispatch("network/INITIALIZE", undefined, { root: true });
   },
+
   async [ActionTypes.SET_VAULT_PASSWORD]({ commit }, payload) {
     const passHash = sha3_512(payload.password);
     await set("passHash", passHash);
@@ -52,6 +50,7 @@ export const actions: ActionTree<State, RootState> & Actions = {
     commit(MutationTypes.SET_PASSWORD_HASH, passHash);
     await bgComm.storePassword(payload.password);
   },
+
   async [ActionTypes.LOGIN]({ commit, state }, payload) {
     const passHash = sha3_512(payload.password);
     if (state.passHash != passHash) {
