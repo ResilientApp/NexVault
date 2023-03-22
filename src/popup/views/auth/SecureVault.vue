@@ -1,10 +1,11 @@
 <script setup lang="ts">
 import Passcode from "./components/Passcode.vue";
-import {nextTick, ref} from "vue";
+import {ref} from "vue";
 import BlockButton from "../../components/BlockButton.vue";
 import {Icon} from '@iconify/vue';
 import {notification} from 'ant-design-vue';
 import {useRootStore} from "../../store";
+import {waitForPaint} from "../../../utils/utils";
 
 const store = useRootStore();
 
@@ -16,7 +17,7 @@ const handleSubmit = async () => {
   if (!initialPass.value) {
     initialPass.value = passcode;
     passcodeComponent.value.clear();
-    await nextTick();
+    await waitForPaint();
     passcodeComponent.value.focus();
     return;
   }

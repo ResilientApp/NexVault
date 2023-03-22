@@ -1,4 +1,4 @@
-import { crx } from "@crxjs/vite-plugin";
+import { crx, ManifestV3Export } from "@crxjs/vite-plugin";
 import vue from "@vitejs/plugin-vue";
 import { defineConfig } from "vite";
 import path from "path";
@@ -11,7 +11,7 @@ export default defineConfig({
       "@": path.resolve(__dirname, "src"),
     },
   },
-  plugins: [vue(), crx({ manifest })],
+  plugins: [vue(), crx({ manifest: manifest as ManifestV3Export })],
   css: {
     preprocessorOptions: {
       less: {
@@ -21,7 +21,7 @@ export default defineConfig({
         },
       },
       scss: {
-        additionalData: `@use "sass:math";\n@import "@/styles/variables";`,
+        additionalData: `@import "@/styles/variables";`,
       },
     },
   },

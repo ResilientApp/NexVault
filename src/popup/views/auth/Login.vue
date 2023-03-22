@@ -1,10 +1,11 @@
 <script setup lang="ts">
 import Passcode from "./components/Passcode.vue";
-import {nextTick, ref} from "vue";
+import {ref} from "vue";
 import BlockButton from "../../components/BlockButton.vue";
 import {Icon} from '@iconify/vue';
 import {notification} from 'ant-design-vue';
 import {useRootStore} from "../../store";
+import {waitForPaint} from "../../../utils/utils";
 
 const store = useRootStore();
 
@@ -12,7 +13,7 @@ const didLoginFail = ref<boolean>(false);
 const passcodeComponent = ref<Passcode>();
 const handleSubmit = async () => {
   didLoginFail.value = false;
-  await nextTick();
+  await waitForPaint();
   const passcode = passcodeComponent.value.getValue();
   if (!passcode) return;
   const isLoginSuccess = (await store.dispatch('user/LOGIN', {password: passcode}));
