@@ -1,21 +1,23 @@
 <script setup lang="ts">
 import Passcode from "./components/Passcode.vue";
-import {ref} from "vue";
+import {nextTick, ref} from "vue";
 import BlockButton from "../../components/BlockButton.vue";
 import {Icon} from '@iconify/vue';
 import {notification} from 'ant-design-vue';
+import {useRootStore} from "../../store";
+
+const store = useRootStore();
 
 let initialPass = ref<string>('');
 const passcodeComponent = ref<Passcode>();
-const handleSubmit = () => {
+const handleSubmit = async () => {
   const passcode = passcodeComponent.value.getValue();
   if (!passcode) return;
   if (!initialPass.value) {
     initialPass.value = passcode;
     passcodeComponent.value.clear();
-    setTimeout(() => {
-      passcodeComponent.value.focus();
-    }, 100);
+    await nextTick();
+    passcodeComponent.value.focus();
     return;
   }
   if (initialPass.value != passcode) {
@@ -23,6 +25,7 @@ const handleSubmit = () => {
     return;
   }
 
+  store.dispatch('user/SET_VAULT_PASSWORD', {password: passcode});
 };
 
 const showErrorNotification = (msg: string) => {

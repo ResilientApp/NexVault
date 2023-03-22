@@ -1,4 +1,9 @@
-import { createStore, Store as VuexStore, DispatchOptions } from "vuex";
+import {
+  createStore,
+  Store as VuexStore,
+  DispatchOptions,
+  useStore,
+} from "vuex";
 import { module as user, State as UserState } from "./user";
 
 import { AllNamespacedActions, AllNamespacedMutations } from "./AllNamespacedX";
@@ -7,13 +12,16 @@ export interface RootState {
   user: UserState;
 }
 
-export default createStore({
+export default createStore<RootState>({
   modules: {
     user,
   },
 });
 
-export type Store = Omit<VuexStore<RootState>, "dispatch" | "commit"> & {
+export type RootStoreType = Omit<
+  VuexStore<RootState>,
+  "dispatch" | "commit"
+> & {
   dispatch<K extends keyof AllNamespacedActions>(
     key: K,
     payload: Parameters<AllNamespacedActions[K]>[1],
@@ -28,6 +36,10 @@ export type Store = Omit<VuexStore<RootState>, "dispatch" | "commit"> & {
 
 declare module "@vue/runtime-core" {
   interface ComponentCustomProperties {
-    $store: Store;
+    $store: RootStoreType;
   }
+}
+
+export function useRootStore(): RootStoreType {
+  return useStore<RootState>();
 }

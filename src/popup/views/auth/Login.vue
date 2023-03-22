@@ -1,27 +1,25 @@
 <script setup lang="ts">
 import Passcode from "./components/Passcode.vue";
-import {ref} from "vue";
+import {nextTick, ref} from "vue";
 import BlockButton from "../../components/BlockButton.vue";
 import {Icon} from '@iconify/vue';
 import {notification} from 'ant-design-vue';
+import {useRootStore} from "../../store";
 
-let initialPass = ref<string>('');
+const store = useRootStore();
+
+const didLoginFail = ref<boolean>(false);
 const passcodeComponent = ref<Passcode>();
-const handleSubmit = () => {
+const handleSubmit = async () => {
+  didLoginFail.value = false;
+  await nextTick();
   const passcode = passcodeComponent.value.getValue();
   if (!passcode) return;
-  if (!initialPass.value) {
-    initialPass.value = passcode;
-    passcodeComponent.value.clear();
-    setTimeout(() => {
-      passcodeComponent.value.focus();
-    }, 100);
-    return;
+  const isLoginSuccess = (await store.dispatch('user/LOGIN', {password: passcode}));
+  if (!isLoginSuccess) {
+    didLoginFail.value = true;
   }
-  if (initialPass.value != passcode) {
-    showErrorNotification("Passcode does not match")
-    return;
-  }
+  console.log(didLoginFail.value);
 
 };
 
@@ -40,12 +38,12 @@ const showErrorNotification = (msg: string) => {
       Enter your passcode
     </div>
     <form action="#" @submit="handleSubmit">
-      <passcode class="passcode" @complete="handleSubmit" ref="passcodeComponent"/>
+      <passcode class="passcode" ref="passcodeComponent" :error="didLoginFail"/>
     </form>
     <block-button class="done-btn" @click="handleSubmit">
       <template v-slot:text>Login</template>
       <template v-slot:icon>
-        <Icon icon="ri:lock-unlock-full"/>
+        <Icon icon="ri:lock-unlock-fill"/>
       </template>
     </block-button>
   </div>

@@ -2,8 +2,11 @@
 import Dashboard from "./views/dashboard/index.vue";
 import SecureVault from "./views/auth/SecureVault.vue";
 import Login from "./views/auth/Login.vue";
-import { get } from "../utils/storage";
-import {onMounted} from "vue";
+import {computed, onMounted, ref} from "vue";
+import {useRootStore} from "./store";
+import LoadingR from "./components/LoadingR.vue";
+import {isDevMode} from "../utils/utils";
+
 /*import {
   generateMnemonic,
   mnemonicToEntropy,
@@ -16,20 +19,29 @@ import { ec as EC } from "elliptic";
 
 const ec = new EC("ed25519");*/
 
-let isLoggedIn = false;
-let currentComponent = SecureVault;
+const store = useRootStore();
+
+const initialized = ref<boolean>(false);
 onMounted(async () => {
-  const passHash = await get('passHash');
-  if(!passHash) {
-    // Route to secureVault
-    currentComponent = SecureVault;
-  } else if(!isLoggedIn){
-    currentComponent = Login;
+  await store.dispatch("user/INITIALIZE", undefined);
+  if(isDevMode()) {
+    initialized.value = true;
   } else {
-    currentComponent = Dashboard;
+    // Synthetic delay for loading animation.
+    setTimeout(() => {
+      initialized.value = true;
+    }, 1000);
   }
   mnemonicTest();
 });
+const currentComponent = computed(() => {
+  if(!store.state.user.passHash) {
+    return SecureVault;
+  } else if(!store.state.user.password){
+    return Login;
+  }
+  return Dashboard;
+})
 
 const mnemonicTest = async () => {
   /*const mnemonic = 'soccer cereal blossom method evoke busy satisfy filter misery awful travel error';//await generateMnemonic(wordlist);
@@ -45,8 +57,20 @@ const mnemonicTest = async () => {
 </script>
 
 <template>
-  <component :is="currentComponent"/>
+  <div class="app-container">
+    <component :is="currentComponent" v-if="initialized"/>
+    <loading-r v-else class="loading-r"/>
+  </div>
 </template>
+
+<style lang="scss" scoped>
+.app-container {
+  display: flex;
+  flex: 1;
+  justify-content: center;
+  align-items: center;
+}
+</style>
 
 <style lang="scss">
 #app {

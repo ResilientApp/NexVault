@@ -20,7 +20,9 @@ export default defineConfig({
           "border-radius-base": "0px",
         },
       },
-      scss: { additionalData: `@import "@/styles/variables";` },
+      scss: {
+        additionalData: `@use "sass:math";\n@import "@/styles/variables";`,
+      },
     },
   },
 });

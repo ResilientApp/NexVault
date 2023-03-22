@@ -1,6 +1,12 @@
 <script setup lang="ts">
 import {Ref, ref} from "vue";
 const emit = defineEmits(['complete']);
+const props = defineProps({
+  error: {
+    type: Boolean,
+    default: false
+  }
+});
 
 const passChars: Ref<Ref<string>[]> = ref([]);
 for (let i = 0; i < 6; i++) passChars.value.push(ref<string>(''));
@@ -65,7 +71,7 @@ defineExpose({
 </script>
 
 <template>
-  <div class="inputs">
+  <div class="inputs" :class="{error: props.error}">
     <div class="passcode-el" v-for="(el, index) in passChars" ref="allInputs">
       <a-input v-model:value="el.value" placeholder="X" @change="e => onInputChange(e, index)"/>
     </div>
@@ -118,5 +124,37 @@ $inp-size: 50;
   left: -5px;
   top: 5px;
   pointer-events: none;
+}
+
+.error .passcode-el {
+  animation-name: Shake;
+  animation-iteration-count: 1;
+  animation-duration: 0.7s;
+  animation-timing-function: ease-in-out;
+  .ant-input {
+    border: 2px solid #d04444;
+  }
+}
+
+.error .passcode-el::before {
+  background: #d04444;
+}
+
+@keyframes Shake  {
+  0% {
+    transform: translateX(0px);
+  }
+
+  33% {
+    transform: translateX(-30px);
+  }
+
+  66% {
+    transform: translateX(30px);
+  }
+
+  100% {
+    transform: translateX(0px);
+  }
 }
 </style>
