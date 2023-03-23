@@ -59,7 +59,7 @@ const routes: Array<RouteRecordRaw> = [
             path: "account/:accountAddress",
             component: Dashboard,
             children: [
-              {path: "", component: AccountInfo, props: true},
+              {path: "", name: "networkHome", component: AccountInfo, props: true},
               { path: "send", name: "sendCoins", component: SendCoins, props: true },
               { path: "submit-tx", name: "submitTx", component: SubmitTransaction, props: true },
             ],

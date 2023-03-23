@@ -73,7 +73,7 @@ defineExpose({
 <template>
   <div class="inputs" :class="{error: props.error}">
     <div class="passcode-el" v-for="(el, index) in passChars" ref="allInputs">
-      <a-input v-model:value="el.value" placeholder="X" @change="e => onInputChange(e, index)"/>
+      <a-input v-model:value="el.value" placeholder="X" @change="(e: InputEvent) => onInputChange(e, index)"/>
     </div>
 
   </div>

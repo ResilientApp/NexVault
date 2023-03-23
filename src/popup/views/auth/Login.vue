@@ -11,11 +11,11 @@ import {determineInitialRouteForState} from "../../router";
 const store = useRootStore();
 
 const didLoginFail = ref<boolean>(false);
-const passcodeComponent = ref<Passcode>();
+const passcodeComponent = ref<typeof Passcode>();
 const handleSubmit = async () => {
   didLoginFail.value = false;
   await waitForPaint();
-  const passcode = passcodeComponent.value.getValue();
+  const passcode = passcodeComponent.value?.getValue();
   if (!passcode) return;
   const isLoginSuccess = (await store.dispatch('user/LOGIN', {password: passcode}));
   if (!isLoginSuccess) {

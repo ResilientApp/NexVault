@@ -7,10 +7,12 @@ import { Mutations, MutationTypes } from "./mutations";
 import { Account, loadPersistedState, persistState, State } from "./state";
 import { RootState } from "../index";
 import { getAccountStatus } from "../../api/network";
+import { submitTransaction, Transaction } from "../../api/transaction";
 
 export enum ActionTypes {
   INITIALIZE = "INITIALIZE",
   ADD_ACCOUNT = "ADD_ACCOUNT",
+  SUBMIT_TRANSACTION = "SUBMIT_TRANSACTION",
 }
 
 type ActionContextType = AugmentedActionContextWithDispatch<Mutations, State>;
@@ -19,6 +21,10 @@ type Actions = {
   [ActionTypes.ADD_ACCOUNT](
     actionContext: ActionContextType,
     payload: { networkId: string; account: Account }
+  ): Promise<string | undefined>;
+  [ActionTypes.SUBMIT_TRANSACTION](
+    actionContext: ActionContextType,
+    payload: {networkId: string; tx: Transaction}
   ): Promise<string | undefined>;
 };
 
@@ -73,6 +79,18 @@ export const actions: ActionTree<State, RootState> & Actions = {
       return "Error fetching network status";
     }
   },
+  async [ActionTypes.SUBMIT_TRANSACTION](
+    { commit, state, rootState, dispatch },
+    payload
+  ){
+    const network = rootState.network.networks[payload.networkId];
+    try {
+      await submitTransaction(network.endpoint, payload.tx);
+    } catch (e) {
+      console.log(e);
+      return "Network error";
+    }
+  }
 };
 
 export type NamespacedActions = Namespaced<Actions, "account">;

@@ -12,7 +12,7 @@
   "include": [
     "vite.config.ts",
     "src/**/*.json",
-    "package.json",
-    "manifest.json"
+    "manifest.json",
+    "package.json"
   ]
 }

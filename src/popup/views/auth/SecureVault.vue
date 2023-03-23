@@ -11,8 +11,11 @@ import {determineInitialRouteForState} from "../../router";
 const store = useRootStore();
 
 let initialPass = ref<string>('');
-const passcodeComponent = ref<Passcode>();
+const passcodeComponent = ref<typeof Passcode>();
 const handleSubmit = async () => {
+  if(!passcodeComponent.value) {
+    return;
+  }
   const passcode = passcodeComponent.value.getValue();
   if (!passcode) return;
   if (!initialPass.value) {

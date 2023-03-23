@@ -5,7 +5,7 @@ import { computed } from "vue";
 
 const router = useRouter();
 const networkId = computed(() => {
-  return router.currentRoute.value.params.networkID;
+  return router.currentRoute.value.params.networkID as string;
 });
 </script>
 <template>

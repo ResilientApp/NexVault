@@ -1,4 +1,4 @@
-<script setup lang="scss">
+<script setup lang="ts">
 
 </script>
 
