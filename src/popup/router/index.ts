@@ -9,6 +9,7 @@ import SecureVault from "../views/auth/SecureVault.vue";
 import Dashboard from "../views/dashboard/index.vue";
 import AddNetwork from "../views/network/AddNetwork.vue";
 import CreateAccount from "../views/account/create/index.vue";
+import CreateOptions from "../views/account/create/CreateOptions.vue";
 import RecoverKeyPhrase from "../views/account/create/RecoverKeyPhrase.vue";
 import ImportAccount from "../views/account/create/ImportAccount.vue";
 import SendCoins from "../views/transactions/SendCoins.vue";
@@ -38,11 +39,19 @@ const routes: Array<RouteRecordRaw> = [
         children: [
           {
             path: "account",
-            component: RouterView,
+            component: CreateAccount,
             children: [
-              { path: "add", component: CreateAccount },
-              { path: "recover", component: RecoverKeyPhrase },
-              { path: "import", component: ImportAccount },
+              { path: "add", component: CreateOptions },
+              {
+                path: "recover",
+                name: "recoverAccount",
+                component: RecoverKeyPhrase,
+              },
+              {
+                path: "import",
+                name: "importAccount",
+                component: ImportAccount,
+              },
             ],
           },
           {

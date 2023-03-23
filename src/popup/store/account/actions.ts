@@ -44,6 +44,9 @@ export const actions: ActionTree<State, RootState> & Actions = {
     if (!rootState.user.password) {
       throw "Assertion user password exists failed";
     }
+    if (state.accounts[payload.networkId + payload.account.address]) {
+      return "Account already exists";
+    }
     try {
       const accountStatus = await getAccountStatus(
         rootState.network.networks[payload.networkId].endpoint,
@@ -65,7 +68,7 @@ export const actions: ActionTree<State, RootState> & Actions = {
         },
         { root: true }
       );
-      //await persistState(state, rootState.user.password);
+      await persistState(state, rootState.user.password);
     } catch (e) {
       return "Error fetching network status";
     }

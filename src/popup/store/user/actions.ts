@@ -41,6 +41,7 @@ export const actions: ActionTree<State, RootState> & Actions = {
       commit(MutationTypes.SET_PASSWORD, pass);
     }
     await dispatch("network/INITIALIZE", undefined, { root: true });
+    await dispatch("account/INITIALIZE", undefined, { root: true });
   },
 
   async [ActionTypes.SET_VAULT_PASSWORD]({ commit }, payload) {

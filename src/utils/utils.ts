@@ -23,3 +23,13 @@ export async function setImmediateInterval(
   await callback();
   return setInterval(callback, ms);
 }
+
+export const ensure0xInHex = (hexString: string) => {
+  return hexString.startsWith("0x") ? hexString : "0x" + hexString;
+};
+
+export const ensureNo0xInHex = (hexString: string) => {
+  return hexString.startsWith("0x")
+    ? hexString.substr(2, hexString.length)
+    : hexString;
+};
