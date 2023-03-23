@@ -111,6 +111,7 @@ export const determineInitialRouteForState = async (state: RootState) => {
   ) {
     selectedAccountAddress = selectedNetwork.selectedAccount;
   }
+
   // Fallback to any address.
   if (!selectedAccountAddress) {
     const networkAccountID = Object.keys(state.account.accounts).find(

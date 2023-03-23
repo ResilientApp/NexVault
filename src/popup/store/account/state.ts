@@ -28,7 +28,7 @@ export const getInitialState = (): State => {
   };
 };
 
-export const PERSISTENCE_KEY = "alLAccounts";
+export const PERSISTENCE_KEY = "allAccounts";
 export const persistState = async (
   state: State,
   password: string

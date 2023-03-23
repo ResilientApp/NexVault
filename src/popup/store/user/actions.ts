@@ -5,7 +5,7 @@ import {
 import { ActionTree } from "vuex";
 import { Mutations, MutationTypes } from "./mutations";
 import { State } from "./state";
-import { RootState } from "../index";
+import store, { RootState } from "../index";
 import { get, set } from "../../../utils/storage";
 import bgComm from "../../api/BackgroundComm";
 import { sha3_512 } from "js-sha3";
@@ -41,7 +41,10 @@ export const actions: ActionTree<State, RootState> & Actions = {
       commit(MutationTypes.SET_PASSWORD, pass);
     }
     await dispatch("network/INITIALIZE", undefined, { root: true });
-    await dispatch("account/INITIALIZE", undefined, { root: true });
+    // Can only initialize account if password exists
+    if(pass) {
+      await store.dispatch("account/INITIALIZE", undefined);
+    }
   },
 
   async [ActionTypes.SET_VAULT_PASSWORD]({ commit }, payload) {
@@ -59,6 +62,8 @@ export const actions: ActionTree<State, RootState> & Actions = {
     }
     commit(MutationTypes.SET_PASSWORD, payload.password);
     await bgComm.storePassword(payload.password);
+    // Initialize account with password
+    await store.dispatch("account/INITIALIZE", undefined);
     return true;
   },
 };
