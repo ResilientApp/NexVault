@@ -24,6 +24,7 @@ export async function setImmediateInterval(
   return setInterval(callback, ms);
 }
 
+
 export const ensure0xInHex = (hexString: string) => {
   return hexString.startsWith("0x") ? hexString : "0x" + hexString;
 };
@@ -33,3 +34,19 @@ export const ensureNo0xInHex = (hexString: string) => {
     ? hexString.substr(2, hexString.length)
     : hexString;
 };
+
+
+export const ellipsizeAddress = (address: string, startLen=4, endLen = 4) => {
+  return address.substring(0, startLen) + "..."+address.substring(address.length - endLen);
+};
+
+export const isNumber = (num: string): boolean =>  {
+  try {
+    if(isNaN(parseFloat(num))) {
+      return false;
+    }
+  } catch(e) {
+    return false;
+  }
+  return true;
+}

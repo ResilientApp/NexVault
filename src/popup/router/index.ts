@@ -7,6 +7,7 @@ import {
 import Login from "../views/auth/Login.vue";
 import SecureVault from "../views/auth/SecureVault.vue";
 import Dashboard from "../views/dashboard/index.vue";
+import AccountInfo from "../views/dashboard/AccountInfo.vue";
 import AddNetwork from "../views/network/AddNetwork.vue";
 import CreateAccount from "../views/account/create/index.vue";
 import CreateOptions from "../views/account/create/CreateOptions.vue";
@@ -41,7 +42,7 @@ const routes: Array<RouteRecordRaw> = [
             path: "account",
             component: CreateAccount,
             children: [
-              { path: "add", component: CreateOptions },
+              { path: "add", name: "createAccountOptions", component: CreateOptions },
               {
                 path: "recover",
                 name: "recoverAccount",
@@ -58,8 +59,9 @@ const routes: Array<RouteRecordRaw> = [
             path: "account/:accountAddress",
             component: Dashboard,
             children: [
-              { path: "send", component: SendCoins },
-              { path: "submit-tx", component: SubmitTransaction },
+              {path: "", component: AccountInfo, props: true},
+              { path: "send", name: "sendCoins", component: SendCoins, props: true },
+              { path: "submit-tx", name: "submitTx", component: SubmitTransaction, props: true },
             ],
           },
         ],
