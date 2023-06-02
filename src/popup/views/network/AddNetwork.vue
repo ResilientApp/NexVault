@@ -13,7 +13,6 @@ const networkURL = ref<string>('');
 
 const store = useRootStore();
 
-
 const addingNetwork = ref<boolean>(false);
 const handleSubmit = async () => {
   if(!nickname.value || !networkURL.value) {

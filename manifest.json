@@ -18,7 +18,10 @@
   "options_page": "src/options/index.html",
   "permissions": [
     "storage",
-    "activeTab"
+    "activeTab",
+    "http://localhost/*",
+    "tabs",
+    "scripting"
   ],
   "version": "1.0.0",
   "web_accessible_resources": [

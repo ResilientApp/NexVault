@@ -1,56 +1,43 @@
 <script setup lang="ts">
-import {ref} from "vue";
+import {ref, computed} from "vue";
 import {Icon} from "@iconify/vue";
 import BlockButton from "../../../components/BlockButton.vue";
-import {ensureNo0xInHex, waitForPaint} from "../../../../utils/utils";
-import {ec as EC} from "elliptic";
-import {sha3_256} from "js-sha3";
-import {notification} from "ant-design-vue";
+import {waitForPaint} from "../../../../utils/utils";
 import {useRouter} from "vue-router";
 import {useRootStore} from "../../../store";
 import LoadingR from "../../../components/LoadingR.vue";
 import {determineInitialRouteForState} from "../../../router";
+import { add_account } from "../../../store/network/helper/add_account";
+import { eventErrorPopup, isValidPrivateKey } from "../../../../utils/utils";
 
 const privateKey = ref<string>('');
 const router = useRouter();
 const store = useRootStore();
-
+const network = computed(() => {
+  return store.getters.getCurrentNetwork;
+})
 const creatingAccount = ref<boolean>(false);
 const newAccountAddress = ref<string>('');
 const importKey = async () => {
-  if(!privateKey.value) {
+  if(!privateKey.value || !isValidPrivateKey(privateKey.value)) {
     return;
   }
   creatingAccount.value = true;
   await waitForPaint();
-  const networkId = router.currentRoute.value.params.networkID as string;
   try {
-    const ec = new EC("ed25519");
-    const keyPair = ec.keyFromPrivate(ensureNo0xInHex(privateKey.value));
-
-    let address = sha3_256(keyPair.getPublic("hex"));
-    address = address.substring(address.length - 40).toUpperCase();
-    const addError = await store.dispatch('account/ADD_ACCOUNT', {
-      networkId, account: {
-        networkId,
-        privateKey: keyPair.getPrivate().toString("hex"),
-        activity: [],
-        address
-      }
-    });
-    if(!addError) {
-      newAccountAddress.value = address;
-      await determineInitialRouteForState(store.state);
-    } else {
-      notification.error({
-        message: addError
+    const wallet = add_account(network.value.chaintype, network.value.endpoint, undefined, privateKey.value)
+    console.log(wallet)
+    await store
+      .dispatch("network/ADD_ACCOUNT", {
+        wallet,
+      })
+      .catch((err) => {
+        eventErrorPopup(err.message)
       });
-    }
+    newAccountAddress.value = wallet.getAddress();
+    await determineInitialRouteForState(store.state);
   } catch(e) {
-    console.log(e);
-    notification.error({
-      message: "Invalid Private Key"
-    });
+    eventErrorPopup("Invalid Private Key")
   } finally {
     creatingAccount.value = false;
   }

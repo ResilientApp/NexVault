@@ -5,6 +5,9 @@ import LoadingR from "./components/LoadingR.vue";
 import {isDevMode} from "../utils/utils";
 import {useRouter} from "vue-router";
 import {determineInitialRouteForState} from "./router";
+import { Buffer } from "buffer";
+
+window.Buffer = Buffer
 
 const store = useRootStore();
 

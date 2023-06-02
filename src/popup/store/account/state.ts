@@ -11,20 +11,22 @@ export interface Activity {
 }
 
 export interface Account {
-  networkId: string;
   address: string;
   privateKey: string;
   activity: Activity[];
   balance?: number;
+  mnemonic: string;
 }
 
 export interface State {
-  accounts: { [key: string]: Account };
+  accounts: Account[];
+  curAccountIdx: number;
 }
 
 export const getInitialState = (): State => {
   return {
-    accounts: {},
+    accounts: [],
+    curAccountIdx: 0
   };
 };
 
@@ -34,12 +36,12 @@ export const persistState = async (
   password: string
 ): Promise<void> => {
   // Strip state to remove reactivity.
-  const strippedState: State = JSON.parse(JSON.stringify(state));
-  const accountIDs = Object.keys(strippedState.accounts);
-  for (const accountId of accountIDs) {
-    const account = strippedState.accounts[accountId];
-    account.privateKey = await aesGcmEncrypt(account.privateKey, password);
-  }
+  let strippedState: State = JSON.parse(JSON.stringify(state));
+  // exit if empty
+  if (!strippedState.accounts.length) return
+  strippedState.accounts = await Promise.all(strippedState.accounts?.map(async ({address, privateKey, activity, balance, mnemonic}) => ({
+    address, privateKey: await aesGcmEncrypt(privateKey, password), activity, balance, mnemonic
+  })))
   await set(PERSISTENCE_KEY, JSON.stringify(strippedState));
 };
 
@@ -51,11 +53,11 @@ export const loadPersistedState = async (
     return;
   }
   const loadedState: State = JSON.parse(state);
-  const accountIDs = Object.keys(loadedState.accounts);
-  for (const accountId of accountIDs) {
-    const account = loadedState.accounts[accountId];
-    account.privateKey = await aesGcmDecrypt(account.privateKey, password);
-  }
+  // if empty return nothing
+  if (!loadedState.accounts.length) return;
+  loadedState.accounts = await Promise.all(loadedState.accounts?.map(async ({address, privateKey, activity, balance, mnemonic}) => ({
+    address, privateKey: await aesGcmDecrypt(privateKey, password), activity, balance, mnemonic
+  })))
   return loadedState;
 };
 export const state = getInitialState();

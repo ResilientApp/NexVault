@@ -20,11 +20,12 @@ const props = defineProps({
 const store = useRootStore();
 const router = useRouter();
 const network = computed(() => {
-  return store.state.network.networks[props.networkID];
+  return store.getters.getCurrentNetwork
 });
 const account = computed(() => {
-  return store.state.account.accounts[props.networkID + props.accountAddress];
+  return store.getters.getCurrentAccountOnNetwork
 });
+
 
 const sendCoins = () => {
   router.replace({name: 'sendCoins'});
@@ -33,13 +34,12 @@ const submitTx = () => {
   router.replace({name: 'submitTx'});
 }
 
-
 </script>
 <template>
 <div class="account-info">
   <div class="balance">
-    <div class="amount">
-      {{account.balance ? parseFloat(account.balance.toFixed(4)) : '---'}}
+    <div class="amount" >
+
     </div>
     <div class="currency">
       {{network.currency}}s

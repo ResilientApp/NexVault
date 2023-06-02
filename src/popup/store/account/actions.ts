@@ -2,7 +2,7 @@ import {
   AugmentedActionContextWithDispatch,
   Namespaced,
 } from "../../types/vuex_types";
-import { ActionTree } from "vuex";
+import { Action, ActionTree } from "vuex";
 import { Mutations, MutationTypes } from "./mutations";
 import { Account, loadPersistedState, persistState, State } from "./state";
 import { RootState } from "../index";
@@ -20,11 +20,11 @@ type Actions = {
   [ActionTypes.INITIALIZE](actionContext: ActionContextType): Promise<void>;
   [ActionTypes.ADD_ACCOUNT](
     actionContext: ActionContextType,
-    payload: { networkId: string; account: Account }
+    payload: { networkId: number; account: Account }
   ): Promise<string | undefined>;
   [ActionTypes.SUBMIT_TRANSACTION](
     actionContext: ActionContextType,
-    payload: {networkId: string; tx: Transaction}
+    payload: { networkId: string; tx: Transaction }
   ): Promise<string | undefined>;
 };
 
@@ -50,30 +50,30 @@ export const actions: ActionTree<State, RootState> & Actions = {
     if (!rootState.user.password) {
       throw "Assertion user password exists failed";
     }
-    if (state.accounts[payload.networkId + payload.account.address]) {
-      return "Account already exists";
-    }
     try {
+      if (rootState.network.selectedNetworkIdx === undefined) return;
       const accountStatus = await getAccountStatus(
-        rootState.network.networks[payload.networkId].endpoint,
+        rootState.network.networks[rootState.network.selectedNetworkIdx]
+          .endpoint,
         payload.account.address
       );
       if (accountStatus.error) {
         return accountStatus.message;
       }
-      const newAccount = { ...payload.account, ...accountStatus.account };
-      commit(MutationTypes.ADD_ACCOUNT, {
-        networkId: payload.networkId,
-        account: newAccount,
-      });
-      await dispatch(
-        "network/SET_SELECTED_ADDRESS",
-        {
-          networkId: payload.networkId,
-          address: newAccount.address,
-        },
-        { root: true }
-      );
+      // const newAccount = { ...payload.account, ...accountStatus.account };
+      // commit(MutationTypes.ADD_ACCOUNT, {
+      //   networkId: payload.networkId,
+      //   account: newAccount,
+      // });
+      // rootState.network.networks[payload.networkId].accounts[newAccount.address] = newAccount
+      // await dispatch(
+      //   "network/SET_SELECTED_ADDRESS",
+      //   {
+      //     networkId: payload.networkId,
+      //     address: newAccount.address,
+      //   },
+      //   { root: true }
+      // );
       await persistState(state, rootState.user.password);
     } catch (e) {
       return "Error fetching network status";
@@ -82,15 +82,17 @@ export const actions: ActionTree<State, RootState> & Actions = {
   async [ActionTypes.SUBMIT_TRANSACTION](
     { commit, state, rootState, dispatch },
     payload
-  ){
-    const network = rootState.network.networks[payload.networkId];
+  ) {
+    if (rootState.network.selectedNetworkIdx === undefined) return;
+    const network =
+      rootState.network.networks[rootState.network.selectedNetworkIdx];
     try {
       await submitTransaction(network.endpoint, payload.tx);
     } catch (e) {
       console.log(e);
       return "Network error";
     }
-  }
+  },
 };
 
 export type NamespacedActions = Namespaced<Actions, "account">;

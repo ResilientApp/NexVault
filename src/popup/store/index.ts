@@ -7,6 +7,7 @@ import {
 import { module as user, State as UserState } from "./user";
 import { module as network, State as NetworkState } from "./network";
 import { module as account, State as AccountState } from "./account";
+import { stateGetters as getters } from "./getters/getters";
 
 import { AllNamespacedActions, AllNamespacedMutations } from "./AllNamespacedX";
 
@@ -22,6 +23,7 @@ export default createStore<RootState>({
     network,
     account,
   },
+  getters
 });
 
 export type RootStoreType = Omit<
