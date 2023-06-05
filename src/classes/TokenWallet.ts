@@ -6,10 +6,16 @@ export type WalletInformation = {
     address: string;
 }
 
+export enum BlockChainType {
+    ETHEREUM = "ETHEREUM",
+    ROK = "ROK",
+}
+
 export abstract class TokenWallet {
     private readonly wallet: WalletInformation;
     private readonly mnemonic: string;
     private readonly rpcUrl: string;
+    abstract blockChain: string;
     protected walletTransactions: any[];
 
     constructor(rpcUrl: string, mnemonic?: string, privateKey?: string) {

@@ -8,7 +8,7 @@
   const router = useRouter();
 
   const network = computed(() => {
-    return store.getters.getCurrentAccountOnNetwork;
+    return store.getters.getCurrentNetwork;
   });
 
   onMounted(() => {

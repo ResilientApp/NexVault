@@ -9,7 +9,7 @@
   import ExecuteTx from "./ExecuteTx.vue";
   import { ethers } from "ethers";
   import Web3 from 'web3';
-import { TokenWallet } from "../../../classes/TokenWallet";
+import { EthereumWallet } from "../../../classes/EthereumWallet";
 
   const props = defineProps<{
     networkID: string;
@@ -31,7 +31,6 @@ import { TokenWallet } from "../../../classes/TokenWallet";
 
 
   const sendCoins = async () => {
-    console.log(balance)
     return
     if (!isSendCoinTxInputValid(amount.value, wallet.transferOwnership() || 0, destinationAddress.value)) return;
     return;

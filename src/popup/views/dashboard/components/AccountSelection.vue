@@ -17,8 +17,8 @@
   });
   const store = useRootStore();
   const router = useRouter();
-  const currentAccountID = computed<string>(() => {
-    return store.getters.getCurrentAccountOnNetwork.selectedAccount as string;
+  const currentAccountID = computed(() => {
+    return store.getters.getSelectedAccountAddress;
   });
 
   const ellipsizedAccount = computed(() => {
@@ -26,7 +26,7 @@
   });
 
   const accounts = computed(() => {
-    return store.getters.getCurrentAccountOnNetwork.accounts;
+    return store.getters.getAllAccountsOnNetwork
   });
   const currentNetwork = computed(() => {
     return store.getters.getCurrentNetworkIdx;

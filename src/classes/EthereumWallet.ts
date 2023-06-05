@@ -1,4 +1,4 @@
-import { TokenWallet, WalletInformation } from "./TokenWallet";
+import { TokenWallet, WalletInformation, BlockChainType } from "./TokenWallet";
 import { BigNumberish, Wallet, ethers } from "ethers";
 
 type EthereumTxObject = {
@@ -11,6 +11,7 @@ type EthereumTxObject = {
 };
 
 export class EthereumWallet extends TokenWallet {
+  blockChain: string = BlockChainType.ETHEREUM
   constructor(rpcUrl: string, mnemonic?: string, privateKey?: string) {
     super(rpcUrl, mnemonic, privateKey);
   }

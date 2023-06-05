@@ -21,7 +21,7 @@
   });
 
   onMounted(() => {
-    if (!network.value) {
+    if (!store.getters.getCurrentAccountOnNetwork) {
       determineInitialRouteForState(store.state);
       return;
     }
@@ -31,6 +31,9 @@
     creatingAccount.value = true;
     await waitForPaint();
     const wallet = add_account(network.value.chaintype, network.value.endpoint);
+    console.log(wallet)
+    console.log(wallet.getAddress())
+    console.log(await wallet.getWalletBalance());
     await store
       .dispatch("network/ADD_ACCOUNT", {
         wallet,

@@ -26,7 +26,6 @@ const importKey = async () => {
   await waitForPaint();
   try {
     const wallet = add_account(network.value.chaintype, network.value.endpoint, undefined, privateKey.value)
-    console.log(wallet)
     await store
       .dispatch("network/ADD_ACCOUNT", {
         wallet,

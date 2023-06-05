@@ -13,7 +13,7 @@
   const router = useRouter();
   const store = useRootStore();
   const network = computed(() => {
-    return store.getters.getCurrentAccountOnNetwork;
+    return store.getters.getCurrentNetwork;
   });
   let intervalID: ReturnType<typeof setInterval> | undefined;
   onMounted(async () => {
