@@ -50,7 +50,7 @@
   };
 
   const isCurrentlySelectedAccount = (address: string) => {
-    return address === store.getters.getCurrentAccountOnNetwork.selectedAccount;
+    return address === currentAccountID.value;
   };
   const isNonexistentAddress = (address: string) => {
     return !accounts.value[address];

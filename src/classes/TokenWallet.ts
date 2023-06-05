@@ -28,8 +28,8 @@ export abstract class TokenWallet {
             if (!this.isValidMnemonic()) throw Error("Invalid Mnemonic");
             this.wallet = this.generatePublicPrivateKeys();
         } else {
-            this.wallet = this.recoverAccountWithPrivateKey(privateKey)
-            this.mnemonic = ""
+            this.wallet = this.recoverAccountWithPrivateKey(privateKey);
+            this.mnemonic = "";
         }
         this.rpcUrl = rpcUrl;
         this.walletTransactions = []

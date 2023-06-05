@@ -1,6 +1,7 @@
 {
   "dependencies": {
     "@ant-design/icons-vue": "^6.1.0",
+    "@types/dotenv": "^8.2.0",
     "ant-design-vue": "^3.2.15",
     "bip39": "^3.1.0",
     "buffer": "^6.0.3",

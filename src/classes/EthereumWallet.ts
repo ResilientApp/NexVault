@@ -1,5 +1,5 @@
 import { TokenWallet, WalletInformation, BlockChainType } from "./TokenWallet";
-import { BigNumberish, Wallet, ethers } from "ethers";
+import { BigNumberish, ethers } from "ethers";
 
 type EthereumTxObject = {
   to: string;
@@ -36,7 +36,7 @@ export class EthereumWallet extends TokenWallet {
     // SEND A TRANSACTION EVENT TO GET THE RECEIPT AND TX DATA FOR THE TRANSACTION SECTION
   }
   public async getWalletBalance() {
-    const provider: any = new ethers.JsonRpcProvider("https://mainnet.infura.io/v3/8dbc23a269684acd88e118d93a47427c");
+    const provider: any = new ethers.JsonRpcProvider("https://sepolia.infura.io/v3/8dbc23a269684acd88e118d93a47427c");
     const balance = await provider.getBalance(this.getAddress())
     return balance
   }

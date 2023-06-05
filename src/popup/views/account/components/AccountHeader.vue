@@ -3,6 +3,7 @@
   import { useRootStore } from "../../../store";
   import { computed, onMounted, onUnmounted } from "vue";
   import { setImmediateInterval } from "../../../../utils/utils";
+  import NetworkDropdown from "../../network/NetworkDropdown.vue";
 
   const props = defineProps({
     networkID: {
@@ -36,47 +37,5 @@
   });
 </script>
 <template>
-  <div class="header-container">
-    <img
-      src="../../../assets/nexvault_small.png"
-      class="header-icon"
-      alt="NexVault Logo"
-    />
-    <div class="network-name" :on-click="changeNetwork" :key="3">
-      {{ network.name }}
-    </div>
-    <div class="activity-indicator" :class="{ active: network.active }"></div>
-  </div>
+    <NetworkDropdown />
 </template>
-
-<style scoped lang="scss">
-  .header-container {
-    display: flex;
-    align-items: center;
-    padding-left: 17px;
-    padding-top: 14px;
-  }
-  .header-icon {
-    width: 45px;
-    height: 45px;
-  }
-
-  .network-name {
-    margin-left: 7px;
-    font-size: 16px;
-    font-weight: bold;
-    color: lighten($app-secondary-dark, 10%);
-  }
-
-  .activity-indicator {
-    margin-left: 5px;
-    width: 6px;
-    height: 6px;
-    border-radius: 6px;
-    background: #d34e4e;
-  }
-
-  .activity-indicator.active {
-    background: #54bf39;
-  }
-</style>

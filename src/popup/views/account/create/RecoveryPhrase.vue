@@ -28,7 +28,7 @@
   const store = useRootStore();
   const onDone = () => {
     eventSuccessfulPopup(
-      `Account on ${store.getters.getCurrentAccountOnNetwork.name} created`
+      `Account on ${store.getters.getCurrentNetwork.name} created`
     );
     determineInitialRouteForState(store.state);
   };

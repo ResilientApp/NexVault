@@ -4,12 +4,12 @@
   import { useRouter } from "vue-router";
   import BlockButton from "../../components/BlockButton.vue";
   import { Icon } from "@iconify/vue";
-  import { ensure0xInHex, isSendCoinTxInputValid } from "../../../utils/utils";
+  import { ensure0xInHex, isSendCoinTxInputValid, castStrippedObjectToWalletObjectType } from "../../../utils/utils";
   import { Transaction } from "../../api/transaction";
   import ExecuteTx from "./ExecuteTx.vue";
   import { ethers } from "ethers";
   import Web3 from 'web3';
-import { EthereumWallet } from "../../../classes/EthereumWallet";
+
 
   const props = defineProps<{
     networkID: string;
@@ -17,6 +17,7 @@ import { EthereumWallet } from "../../../classes/EthereumWallet";
   }>();
 
   const amount = ref<string>("");
+  let accountBalance = ref<number>();
   const destinationAddress = ref<string>("");
   const txHash = ref<string>("");
   const executableTx = ref<Transaction>();
@@ -25,12 +26,15 @@ import { EthereumWallet } from "../../../classes/EthereumWallet";
   const network = computed(() => {
     return store.getters.getCurrentNetwork;
   });
-  const account = computed(() => {
-    return store.getters.getCurrentAccountOnNetwork;
+  const account = computed(async() => {
+    const acc = castStrippedObjectToWalletObjectType(store.getters.getCurrentAccountOnNetwork);
+    accountBalance = await acc.getWalletBalance()
+    return acc;
   });
 
 
   const sendCoins = async () => {
+    console.log(account.value)
     return
     if (!isSendCoinTxInputValid(amount.value, wallet.transferOwnership() || 0, destinationAddress.value)) return;
     return;

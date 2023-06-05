@@ -1,10 +1,11 @@
 <script setup lang="ts">
 import { useRootStore } from "../../store";
-import { computed } from "vue";
+import { computed, onMounted, ref } from "vue";
 import IconButton from "../../components/IconButton.vue";
 import { Icon } from "@iconify/vue";
 import AccountActivity from "./AccountActivity.vue";
 import { useRouter } from "vue-router";
+import { castStrippedObjectToWalletObjectType } from "../../../utils/utils";
 
 const props = defineProps({
   networkID: {
@@ -23,7 +24,7 @@ const network = computed(() => {
   return store.getters.getCurrentNetwork
 });
 const account = computed(() => {
-  return store.getters.getCurrentAccountOnNetwork
+  return castStrippedObjectToWalletObjectType(store.getters.getCurrentAccountOnNetwork);
 });
 
 
@@ -39,7 +40,6 @@ const submitTx = () => {
 <div class="account-info">
   <div class="balance">
     <div class="amount" >
-
     </div>
     <div class="currency">
       {{network.currency}}s

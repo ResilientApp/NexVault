@@ -1,6 +1,9 @@
 import { ethers } from "ethers";
 import { notification } from "ant-design-vue";
 import { VueNode } from "ant-design-vue/lib/_util/type";
+import { EthereumWallet } from "../classes/EthereumWallet";
+import { RokWallet } from "../classes/RokWallet";
+import { BlockChainType } from "../classes/TokenWallet";
 
 export function isDevMode(): boolean {
   return process.env.NODE_ENV === "development";
@@ -129,3 +132,7 @@ export const getKeyValueFromSelectedTab = (key: string): any => {
   });
 };
 
+export function castStrippedObjectToWalletObjectType(proxyWalletObject: any) : EthereumWallet | RokWallet {
+  if (proxyWalletObject.blockChain === BlockChainType.ETHEREUM) return Object.assign(EthereumWallet.prototype, proxyWalletObject);
+  return Object.assign(RokWallet.prototype, proxyWalletObject);
+}

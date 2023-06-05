@@ -10,6 +10,7 @@ import { get } from "../../../utils/storage";
 import { getNetworkStatus } from "../../api/network";
 import { ChainType } from "./helper/supported_chains";
 import { TokenWallet } from "../../../classes/TokenWallet";
+// import { add_account } from "./helper/add_account";
 
 export enum ActionTypes {
   INITIALIZE = "INITIALIZE",
@@ -52,8 +53,26 @@ export const actions: ActionTree<State, RootState> & Actions = {
       if (!networkJsonStr) {
         return;
       }
-      const networks = JSON.parse(networkJsonStr);
-      commit(MutationTypes.SET_INITIAL_STATE, networks);
+      const allNetworks = JSON.parse(networkJsonStr);
+  //     console.log(allNetworks)
+  //     allNetworks.networks.map((val) => console.log(val))
+  //     allNetworks.networks =  allNetworks.networks.map((val) => {
+  //       // for(let [key, value] in Object.entries(val.accounts)) {
+  //       //   val.accounts[key] = add_account()
+  //       // }
+  //     return 1;
+  //     })
+  // //     let alteredState = state;
+  // // alteredState.networks = alteredState.networks.map((network) => {
+  // //   let networkWallets: any;
+  // //   for (const [key, value] of Object.entries(network.accounts)) {
+  // //     networkWallets = { value, ...networkWallets }
+  //   // }
+  // //   return networkWallets;
+  // // })
+
+
+      commit(MutationTypes.SET_INITIAL_STATE, allNetworks);
     } catch (e) {
       console.log(e);
     }

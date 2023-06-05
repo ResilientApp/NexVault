@@ -1,5 +1,5 @@
 import { TokenWallet } from "../../../classes/TokenWallet";
-import { set, get } from "../../../utils/storage";
+import { set } from "../../../utils/storage";
 import { eth_mainnet, goerli_testnet, sepolia_testnet, ChainType } from "./helper/supported_chains";
 
 export interface Network {
