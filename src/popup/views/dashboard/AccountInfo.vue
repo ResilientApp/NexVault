@@ -1,11 +1,12 @@
 <script setup lang="ts">
 import { useRootStore } from "../../store";
-import { computed, onMounted, ref } from "vue";
+import { computed, onMounted, onUnmounted, ref } from "vue";
 import IconButton from "../../components/IconButton.vue";
 import { Icon } from "@iconify/vue";
 import AccountActivity from "./AccountActivity.vue";
 import { useRouter } from "vue-router";
 import { castStrippedObjectToWalletObjectType } from "../../../utils/utils";
+import { ethers } from "ethers";
 
 const props = defineProps({
   networkID: {
@@ -27,6 +28,11 @@ const account = computed(() => {
   return castStrippedObjectToWalletObjectType(store.getters.getCurrentAccountOnNetwork);
 });
 
+onMounted(async () => {
+  const balance = await account.value.getWalletBalance();
+  const balanceDiv = document.getElementsByClassName('amount')[0];
+  balanceDiv.innerHTML = ethers.formatEther(balance);
+})
 
 const sendCoins = () => {
   router.replace({name: 'sendCoins'});
@@ -40,6 +46,7 @@ const submitTx = () => {
 <div class="account-info">
   <div class="balance">
     <div class="amount" >
+      
     </div>
     <div class="currency">
       {{network.currency}}s

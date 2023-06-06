@@ -21,7 +21,7 @@
     intervalID = await setImmediateInterval(() => {
       store.dispatch(
         "network/REFRESH_STATUS",
-        store.state.network.selectedNetworkIdx || 0
+        store.state.network.selectedNetworkIdx
       );
     }, 6000);
   });

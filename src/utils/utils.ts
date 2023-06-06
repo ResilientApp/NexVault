@@ -31,7 +31,7 @@ export const isSendCoinTxInputValid = (
     eventErrorPopup("Enter a valid amount");
     return false;
   }
-  if (parseFloat(ethToSend) > (accountBalance || 0)) {
+  if (parseFloat(ethToSend) > (parseFloat(ethers.formatEther(accountBalance)) || 0)) {
     eventErrorPopup("Insufficient funds");
     return false;
   }

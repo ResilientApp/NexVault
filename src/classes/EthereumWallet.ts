@@ -28,7 +28,7 @@ export class EthereumWallet extends TokenWallet {
     return { address, publicKey: null, privateKey };
   }
   public async signTransaction(txObject: EthereumTxObject) {
-    const provider: any = new ethers.JsonRpcProvider(this.getRpcUrl());
+    const provider: any = new ethers.JsonRpcProvider("https://sepolia.infura.io/v3/8dbc23a269684acd88e118d93a47427c");
     const signer = new ethers.Wallet(this.getPrivateKey(), provider);
     const tx = await signer.sendTransaction({...txObject});
     const receipt = await tx.wait();

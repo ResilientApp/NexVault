@@ -4,12 +4,15 @@
   import { useRouter } from "vue-router";
   import BlockButton from "../../components/BlockButton.vue";
   import { Icon } from "@iconify/vue";
-  import { ensure0xInHex, isSendCoinTxInputValid, castStrippedObjectToWalletObjectType } from "../../../utils/utils";
+  import {
+    ensure0xInHex,
+    isSendCoinTxInputValid,
+    castStrippedObjectToWalletObjectType,
+  } from "../../../utils/utils";
   import { Transaction } from "../../api/transaction";
   import ExecuteTx from "./ExecuteTx.vue";
   import { ethers } from "ethers";
-  import Web3 from 'web3';
-
+  import { eventErrorPopup } from "../../../utils/utils";
 
   const props = defineProps<{
     networkID: string;
@@ -17,7 +20,6 @@
   }>();
 
   const amount = ref<string>("");
-  let accountBalance = ref<number>();
   const destinationAddress = ref<string>("");
   const txHash = ref<string>("");
   const executableTx = ref<Transaction>();
@@ -26,34 +28,45 @@
   const network = computed(() => {
     return store.getters.getCurrentNetwork;
   });
-  const account = computed(async() => {
-    const acc = castStrippedObjectToWalletObjectType(store.getters.getCurrentAccountOnNetwork);
-    accountBalance = await acc.getWalletBalance()
-    return acc;
+  const account = computed(() => {
+    return castStrippedObjectToWalletObjectType(
+      store.getters.getCurrentAccountOnNetwork
+    );
   });
 
-
   const sendCoins = async () => {
-    console.log(account.value)
-    return
-    if (!isSendCoinTxInputValid(amount.value, wallet.transferOwnership() || 0, destinationAddress.value)) return;
-    return;
-    const web3 = new Web3();
-    const provider: any = new ethers.InfuraProvider("sepolia");
-    console.log("SENDING ETH---------------------------")
-    const signer = new ethers.Wallet(account.value.privateKey, provider);
-    const tx = await signer.sendTransaction({
-        to: ensure0xInHex(destinationAddress.value),
-        value: ethers.parseUnits(amount.value, "ether"),
-        gasLimit: "21000",
-        gasPrice: web3.utils.toWei('10', 'gwei'),
-      });
-    
-    console.log('Transaction Completed------------------------------')
-    console.log(tx)
+    const walletBalanceInWei = await account.value.getWalletBalance();
+    if (
+      !isSendCoinTxInputValid(
+        amount.value,
+        walletBalanceInWei || 0,
+        destinationAddress.value
+      )
+    ) return;
+    const txObject = {
+      to: ensure0xInHex(destinationAddress.value),
+      value: ethers.parseUnits(amount.value, "ether"),
+      gasLimit: "21000",
+      maxPriorityFeePerGas: ethers.parseUnits('40', 'gwei'),
+      nonce: 0,
+      maxFeePerGas: ethers.parseUnits('40', 'gwei'),
+    };
+    await account.value.signTransaction(txObject);
+    // const provider: any = new ethers.InfuraProvider("sepolia");
+    // console.log("SENDING ETH---------------------------")
+    // const signer = new ethers.Wallet(account.value.privateKey, provider);
+    // const tx = await signer.sendTransaction({
+    //     to: ensure0xInHex(destinationAddress.value),
+    //     value: ethers.parseUnits(amount.value, "ether"),
+    //     gasLimit: "21000",
+    //     gasPrice: web3.utils.toWei('10', 'gwei'),
+    //   });
 
-    const receipt = await tx.wait();
-    console.log(receipt)
+    // console.log('Transaction Completed------------------------------')
+    // console.log(tx)
+
+    // const receipt = await tx.wait();
+    // console.log(receipt)
 
     // tx.signature = ec.sign(JSON.stringify(tx), keyPair).toDER().toString();
     // executableTx.value = tx;
