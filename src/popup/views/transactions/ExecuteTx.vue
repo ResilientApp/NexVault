@@ -16,7 +16,7 @@ const router = useRouter();
 const store = useRootStore();
 
 const network = computed(() => {
-  return store.state.network.networks[props.networkID];
+  return store.getters.getCurrentNetwork;
 });
 
 const executing = ref<boolean>(true);

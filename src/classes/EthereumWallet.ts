@@ -1,12 +1,12 @@
 import { TokenWallet, WalletInformation, BlockChainType } from "./TokenWallet";
-import { BigNumberish, ethers } from "ethers";
+import { BigNumberish, Provider, ethers } from "ethers";
 
 type EthereumTxObject = {
   to: string;
   gasLimit: BigNumberish;
   maxFeePerGas: BigNumberish;
   maxPriorityFeePerGas: BigNumberish;
-  nonce: number;
+  nonce?: number;
   value: BigNumberish;
 };
 
@@ -28,7 +28,7 @@ export class EthereumWallet extends TokenWallet {
     return { address, publicKey: null, privateKey };
   }
   public async signTransaction(txObject: EthereumTxObject) {
-    const provider: any = new ethers.JsonRpcProvider("https://sepolia.infura.io/v3/8dbc23a269684acd88e118d93a47427c");
+    const provider: Provider = new ethers.JsonRpcProvider("https://sepolia.infura.io/v3/8dbc23a269684acd88e118d93a47427c");
     const signer = new ethers.Wallet(this.getPrivateKey(), provider);
     const tx = await signer.sendTransaction({...txObject});
     const receipt = await tx.wait();
@@ -36,7 +36,7 @@ export class EthereumWallet extends TokenWallet {
     // SEND A TRANSACTION EVENT TO GET THE RECEIPT AND TX DATA FOR THE TRANSACTION SECTION
   }
   public async getWalletBalance() {
-    const provider: any = new ethers.JsonRpcProvider("https://sepolia.infura.io/v3/8dbc23a269684acd88e118d93a47427c");
+    const provider: Provider = new ethers.JsonRpcProvider("https://sepolia.infura.io/v3/8dbc23a269684acd88e118d93a47427c");
     const balance = await provider.getBalance(this.getAddress())
     return balance
   }

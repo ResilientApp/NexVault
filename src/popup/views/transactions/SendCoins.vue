@@ -45,10 +45,9 @@
     ) return;
     const txObject = {
       to: ensure0xInHex(destinationAddress.value),
-      value: ethers.parseUnits(amount.value, "ether"),
+      value: ethers.parseEther(amount.value),
       gasLimit: "21000",
       maxPriorityFeePerGas: ethers.parseUnits('40', 'gwei'),
-      nonce: 0,
       maxFeePerGas: ethers.parseUnits('40', 'gwei'),
     };
     await account.value.signTransaction(txObject);
